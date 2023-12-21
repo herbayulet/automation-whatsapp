@@ -66,8 +66,9 @@ it("Run Test", async () => {
       el7.click();
       el7.setValue("mas ucup gue lg testing dulu sorry");
 
+      await driver.pause(2000);
       const e8 = await driver.$(
-        'android=new UiSelector().resourceId("com.whatsapp:id/send_container")'
+        '//*[@resource-id="com.whatsapp:id/send_container"]'
       );
       await e8.click();
     } else {
