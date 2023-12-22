@@ -13,6 +13,7 @@
   "dependencies": {
     "@wdio/cli": "^8.26.3",
     "appium": "^2.3.0",
+    "mysql2": "^3.6.5",
     "webdriverio": "^8.26.3"
   },
   "devDependencies": {
