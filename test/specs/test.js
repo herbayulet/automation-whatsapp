@@ -92,8 +92,9 @@ const runScript = async (driver, targetIndex, searchValue, message) => {
       await driver.pause(2000);
 
       // keycode 3 untuk tombol home
-      await driver.pressKeyCode(3);
-      await driver.pause(2000);
+      for (let i = 0; i < 3; i++) {
+        await driver.pressKeyCode(4);
+      }
     } else {
       console.error(`Element with index ${targetIndex} not found.`);
     }
@@ -112,42 +113,48 @@ const deleteSessionSafely = async (driver) => {
   }
 };
 
-it("Run Test", async () => {
+describe("Test Suite", () => {
   let driver;
 
-  try {
-    driver = await remote(wdOpts);
+  before(async () => {
+    try {
+      driver = await remote(wdOpts);
 
-    if (!driver.sessionId) {
-      console.error("WebDriver session is not started. Exiting...");
-      return;
+      if (!driver.sessionId) {
+        console.error("WebDriver session is not started. Exiting...");
+        process.exit(1);
+      }
+    } catch (error) {
+      console.error("Error starting WebDriver session:", error);
     }
+  });
 
-    await driver.pause(2000);
-    await runScript(driver, 2, "sim 2", "halo sim 2");
-
-    // keycode 3 untuk tombol home
-    await driver.pressKeyCode(3);
-    await driver.pause(2000);
-
-    // Pastikan sesi masih aktif sebelum mencoba menghapus
+  after(async () => {
     await deleteSessionSafely(driver);
+  });
 
-    driver = await remote(wdOpts); // Start a new session
+  for (let i = 0; i <= 3; i++) {
+    it("Run Test", async () => {
+      try {
+        // Run script for sim 2
+        await runScript(driver, 2, "sim 2", "halo sim 2");
 
-    await runScript(driver, 4, "sim 1", "halo sim 1");
-    await driver.pause(2000);
+        // Pause and wait for any asynchronous tasks to complete
+        await driver.pause(2000);
 
-    // Menutup aplikasi menggunakan adbForceStop
+        // Press home button
+        for (let i = 0; i < 3; i++) {
+          await driver.pressKeyCode(4);
+        }
+        // Run script for sim 1
+        await runScript(driver, 4, "sim 1", "halo sim 1");
+        await driver.pause(2000);
 
-    // Pastikan sesi masih aktif sebelum mencoba menghapus
-    await deleteSessionSafely(driver);
-  } catch (error) {
-    console.error("Error during execution:", error);
-  } finally {
-    if (driver) {
-      console.log("Closing the driver connection...");
-      await driver.deleteSession();
-    }
+        // Pause and wait for any asynchronous tasks to complete
+        await driver.pause(2000);
+      } catch (error) {
+        console.error("Error during execution:", error);
+      }
+    }).timeout(60000);
   }
 });
