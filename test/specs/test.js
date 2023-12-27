@@ -1,6 +1,5 @@
 const { remote } = require("webdriverio");
 const mysql = require("mysql2/promise");
-const { exec } = require("child_process");
 
 const wdOpts = {
   hostname: process.env.APPIUM_HOST || "localhost",
@@ -13,18 +12,6 @@ const wdOpts = {
     "appium:automationName": "UiAutomator2",
     "appium:noReset": true,
   },
-};
-
-const adbForceStop = async (packageName) => {
-  return new Promise((resolve, reject) => {
-    exec(`adb shell am force-stop ${packageName}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(stderr || error.message);
-      } else {
-        resolve(stdout.trim());
-      }
-    });
-  });
 };
 
 const insertMessageIntoDatabase = async (message) => {
@@ -152,7 +139,6 @@ it("Run Test", async () => {
     await driver.pause(2000);
 
     // Menutup aplikasi menggunakan adbForceStop
-    await adbForceStop("com.whatsapp");
 
     // Pastikan sesi masih aktif sebelum mencoba menghapus
     await deleteSessionSafely(driver);
