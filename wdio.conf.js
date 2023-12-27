@@ -55,7 +55,7 @@ exports.config = {
     {
       // capabilities for local Appium web tests on an Android Emulator
       platformName: "Android",
-      "appium:deviceName": "192.168.180.58:5555", //7TYD45Y58LRGGEDA
+      "appium:deviceName": "192.168.180.93:5555", //7TYD45Y58LRGGEDA
       "appium:platformVersion": "13.0",
       "appium:automationName": "UiAutomator2",
       // "appium:app": path.join(process.cwd(), "./android/app/universal.apk"),
